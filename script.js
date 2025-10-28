@@ -3,10 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const purposeSelect = document.getElementById("purpose");
   const otherPurposeGroup = document.getElementById("otherPurposeGroup");
   
-  // NEW DOM ELEMENTS
+  // DOM ELEMENTS
   const appointmentSelect = document.getElementById("appointment");
   const appointmentDetailsGroup = document.getElementById("appointmentDetailsGroup");
-  // The 'Whom to Meet' input is now 'reference'
   const whomToMeetInput = document.getElementById("reference");
   const appointmentDateTimeInput = document.getElementById("appointmentDateTime");
   
@@ -18,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     otherPurposeGroup.classList.toggle("hidden", purposeSelect.value !== "other");
   });
 
-  // NEW LOGIC for Appointment Select
+  // LOGIC for Appointment Select
   appointmentSelect.addEventListener("change", () => {
     const isAppointmentYes = appointmentSelect.value === "Yes";
     
@@ -49,14 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
       reference: whomToMeetInput.value.trim(),
       appointmentDateTime: appointmentDateTimeInput.value.trim(),
 
-      referenceBy: document.getElementById("referenceBy").value.trim(), // Added referenceBy to match the previous structure
+      referenceBy: document.getElementById("referenceBy").value.trim(),
     };
 
     try {
       // Save Reception data to Google Sheet
       const response = await fetch(WEB_APP_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain" }, // ✅ fixed
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(formData),
       });
 
@@ -68,15 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Redirect based on purpose
       const purpose = formData.purpose.toLowerCase();
-      if (purpose === "interview") {
-        window.location.href = "interviewType.html"
-      } else if (purpose === "training") {
-        window.location.href = "indextraining.html";
-      } else if (purpose === "bikedelivery") {
+
+      // === MODIFICATION ===
+      // Both "interview" and "training" redirects have been removed.
+      
+      if (purpose === "bikedelivery") {
         window.location.href = "vehicle.html";
       } else if (purpose === "accessories") {
         window.location.href = "accessories.html";
       } else {
+        // "Interview", "Training", and all "Other" purposes will now run this code
         alert("✅ Reception data saved!");
         form.reset();
         otherPurposeGroup.classList.add("hidden");
@@ -89,6 +89,4 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("❌ Error submitting data!");
     }
   });
-
 });
-
